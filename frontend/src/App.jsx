@@ -14,6 +14,8 @@ import PredictionHistory from './pages/PredictionHistory';
 import AudioManager from './pages/AudioManager';
 import TTSManager from './pages/TTSManager';
 import CSVManager from './pages/CSVManager';
+import WebSocketDebug from './pages/WebSocketDebug';
+import SimpleWebSocketTest from './pages/SimpleWebSocketTest';
 import { MdDarkMode, MdMenu, MdClose } from 'react-icons/md';
 import Login from './pages/Login';
 import { apiRequest } from './api';
@@ -89,6 +91,8 @@ const App = () => {
     { to: '/training-results', label: 'Training Results' },
     { to: '/predict', label: 'Manual Prediction' },
     { to: '/live-predict', label: 'Live Predict' },
+    { to: '/ws-debug', label: 'WebSocket Debug' },
+    { to: '/simple-ws-test', label: 'Simple WS Test' },
     // editor-only routes
     ...(isEditor ? [
       { to: '/csv-manager', label: 'CSV & Training Manager' },
@@ -169,6 +173,8 @@ const App = () => {
             <Route path="/training-results" element={<TrainingResults user={user} />} />
             <Route path="/predict" element={<Predict user={user} />} />
             <Route path="/live-predict" element={<LivePredict user={user} />} />
+            <Route path="/ws-debug" element={<WebSocketDebug user={user} />} />
+            <Route path="/simple-ws-test" element={<SimpleWebSocketTest user={user} />} />
             <Route path="/history" element={<PredictionHistory user={user} />} />
             <Route path="/admin" element={isEditor ? <AdminTools user={user} /> : <Dashboard user={user} />} />
             <Route path="/audio-manager" element={isEditor ? <AudioManager user={user} /> : <Dashboard user={user} />} />

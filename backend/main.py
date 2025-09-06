@@ -34,7 +34,11 @@ async def lifespan(app: FastAPI):
     await create_indexes()
     await ensure_default_editor()
     logging.info("Indexes created. App is starting...")
-    loop = asyncio.get_event_loop()
+    
+    # Start the prediction worker for real-time predictions
+    from routes.liveWS import start_prediction_worker
+    await start_prediction_worker()
+    
     yield
     client.close()
     logging.info("MongoDB connection closed. App is shutting down...")

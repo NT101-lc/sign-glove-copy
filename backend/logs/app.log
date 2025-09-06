@@ -13588,3 +13588,254 @@ Total rows in gesture_data.csv: 8053
 2025-09-06 16:05:03,288 - signglove - INFO - WebSocket disconnected: 127.0.0.1
 2025-09-06 16:06:09,714 - signglove - INFO - WebSocket disconnected: 127.0.0.1
 2025-09-06 16:06:09,950 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-06 16:38:11,725 - core.database - ERROR - MongoDB connection failed:
+Traceback (most recent call last):
+  File "C:\Users\Dell\Documents\sign-glove\backend\core\database.py", line 36, in test_connection
+    await client.admin.command("ping")
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\database.py", line 926, in command
+    with self._client._conn_for_reads(read_preference, session, operation=command_name) as (
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1864, in _conn_for_reads
+    server = self._select_server(read_preference, session, operation)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1812, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 409, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 387, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 294, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 344, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 68bc00d3cdce0297912fa71a, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-09-06 16:48:59,954 - core.database - ERROR - MongoDB connection failed:
+Traceback (most recent call last):
+  File "C:\Users\Dell\Documents\sign-glove\backend\core\database.py", line 36, in test_connection
+    await client.admin.command("ping")
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\database.py", line 926, in command
+    with self._client._conn_for_reads(read_preference, session, operation=command_name) as (
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1864, in _conn_for_reads
+    server = self._select_server(read_preference, session, operation)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1812, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 409, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 387, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 294, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 344, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 68bc035ad24ea81e99fe7be9, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-09-06 17:02:26,684 - core.database - ERROR - MongoDB connection failed:
+Traceback (most recent call last):
+  File "C:\Users\Dell\Documents\sign-glove\backend\core\database.py", line 36, in test_connection
+    await client.admin.command("ping")
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\database.py", line 926, in command
+    with self._client._conn_for_reads(read_preference, session, operation=command_name) as (
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1864, in _conn_for_reads
+    server = self._select_server(read_preference, session, operation)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1812, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 409, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 387, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 294, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 344, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 68bc0682e75c6f3d399f230f, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-09-06 17:12:20,652 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-06 17:12:21,308 - root - INFO - Indexes created. App is starting...
+2025-09-06 17:13:17,037 - signglove - INFO - Request: POST /auth/login
+2025-09-06 17:13:17,457 - signglove - INFO - Response: POST /auth/login - 200
+2025-09-06 17:13:17,482 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:13:17,548 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:13:31,021 - signglove - INFO - Request: GET /training/
+2025-09-06 17:13:31,027 - signglove - INFO - Request: GET /training/metrics/latest
+2025-09-06 17:13:31,028 - signglove - INFO - Request: GET /model/status
+2025-09-06 17:13:31,041 - signglove - INFO - Response: GET /training/metrics/latest - 200
+2025-09-06 17:13:31,042 - signglove - INFO - Response: GET /model/status - 200
+2025-09-06 17:13:31,065 - signglove - INFO - Request: GET /training/metrics/latest
+2025-09-06 17:13:31,079 - signglove - INFO - Request: GET /model/status
+2025-09-06 17:13:31,081 - root - INFO - Fetched 5 training results
+2025-09-06 17:13:31,090 - signglove - INFO - Response: GET /training/metrics/latest - 200
+2025-09-06 17:13:31,091 - signglove - INFO - Response: GET /training/ - 200
+2025-09-06 17:13:31,095 - signglove - INFO - Response: GET /model/status - 200
+2025-09-06 17:13:31,117 - signglove - INFO - Request: GET /training/
+2025-09-06 17:13:31,123 - signglove - INFO - Response: GET /training/ - 200
+2025-09-06 17:13:33,158 - signglove - INFO - Request: GET /model/status
+2025-09-06 17:13:33,162 - signglove - INFO - Response: GET /model/status - 200
+2025-09-06 17:13:33,304 - signglove - INFO - Request: GET /model/status
+2025-09-06 17:13:33,309 - signglove - INFO - Response: GET /model/status - 200
+2025-09-06 17:14:27,468 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-06 17:14:47,883 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-06 17:14:48,508 - root - INFO - Indexes created. App is starting...
+2025-09-06 17:15:05,431 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-06 17:15:06,010 - root - INFO - Indexes created. App is starting...
+2025-09-06 17:16:14,934 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:16:14,943 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:16:27,593 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:17:28,989 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:24:19,506 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:24:58,157 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:25:49,271 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:25:54,611 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:28:17,643 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:28:22,231 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:28:52,853 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:28:52,922 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:28:52,933 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:28:52,999 - signglove - INFO - Request: GET /training/
+2025-09-06 17:28:53,003 - signglove - INFO - Request: GET /model/status
+2025-09-06 17:28:53,004 - signglove - INFO - Request: GET /training/metrics/latest
+2025-09-06 17:28:53,030 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:28:53,039 - signglove - INFO - Response: GET /model/status - 200
+2025-09-06 17:28:53,040 - signglove - INFO - Response: GET /training/metrics/latest - 200
+2025-09-06 17:28:53,063 - root - INFO - Fetched 5 training results
+2025-09-06 17:28:53,066 - signglove - INFO - Request: GET /training/metrics/latest
+2025-09-06 17:28:53,067 - signglove - INFO - Request: GET /model/status
+2025-09-06 17:28:53,087 - signglove - INFO - Response: GET /training/ - 200
+2025-09-06 17:28:53,091 - signglove - INFO - Response: GET /training/metrics/latest - 200
+2025-09-06 17:28:53,092 - signglove - INFO - Response: GET /model/status - 200
+2025-09-06 17:28:53,111 - signglove - INFO - Request: GET /training/
+2025-09-06 17:28:53,123 - signglove - INFO - Response: GET /training/ - 200
+2025-09-06 17:29:01,002 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:29:24,540 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:29:49,848 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:29:51,240 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:31:53,462 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:33:07,062 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:35:17,319 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:37:35,251 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:37:35,308 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:37:35,321 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:37:35,378 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:37:38,605 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:37:38,670 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:37:38,687 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:37:38,747 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:38:05,856 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:38:06,571 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:38:06,653 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:38:06,681 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:38:06,741 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:38:24,963 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:38:42,887 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:39:11,409 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:40:18,258 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:40:22,857 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:40:43,600 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:40:43,606 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:41:39,835 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:41:40,166 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:41:40,232 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:41:40,240 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:41:40,306 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:41:46,544 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:42:10,179 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:44:31,237 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:44:33,128 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:53:12,928 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:53:22,932 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:54:05,592 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:54:29,668 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:54:32,722 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:57:05,891 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:57:05,898 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:58:04,333 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:58:04,411 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:58:04,499 - signglove - INFO - Request: GET /auth/me
+2025-09-06 17:58:04,566 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 17:58:15,201 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:59:02,308 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:59:02,309 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:59:02,461 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-06 17:59:19,571 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-06 17:59:20,220 - root - INFO - Indexes created. App is starting...
+2025-09-06 17:59:20,222 - signglove - INFO - Prediction worker started
+2025-09-06 17:59:20,229 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:59:35,471 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 17:59:36,824 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:59:37,762 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 17:59:48,582 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:02:41,733 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:02:41,735 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:02:47,273 - signglove - INFO - Request: GET /auth/me
+2025-09-06 18:02:47,368 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 18:02:47,394 - signglove - INFO - Request: GET /auth/me
+2025-09-06 18:02:47,458 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-06 18:02:47,584 - signglove - INFO - Request: GET /health
+2025-09-06 18:02:47,636 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-06 18:02:47,643 - signglove - INFO - Response: GET /health - 200
+2025-09-06 18:02:57,266 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:02:57,273 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:03:55,873 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:05:17,453 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:05:19,314 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:06:47,036 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:06:47,037 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:06:47,209 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-06 18:07:33,028 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-06 18:07:33,604 - root - INFO - Indexes created. App is starting...
+2025-09-06 18:07:33,605 - signglove - INFO - Prediction worker started
+2025-09-06 18:07:36,314 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:07:36,328 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:07:43,082 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:07:43,100 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:08:00,306 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:08:00,322 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:08:02,319 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:08:02,336 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:16:05,122 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:10,169 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:10,259 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:10,292 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:10,308 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:10,314 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:10,328 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:10,354 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:12,608 - signglove - INFO - WebSocket connected: 127.0.0.1
+2025-09-06 18:17:13,481 - signglove - INFO - WebSocket disconnected: 127.0.0.1
+2025-09-06 18:17:13,908 - signglove - INFO - Request: GET /auth/me
+2025-09-06 18:17:14,063 - signglove - ERROR - Error b6887a38-9837-4300-b3f1-9335ebd1cc48: HTTPException - 
+2025-09-06 18:17:14,069 - signglove - INFO - Response: GET /auth/me - 401
+2025-09-06 18:17:14,104 - signglove - INFO - Request: GET /auth/me
+2025-09-06 18:17:14,156 - signglove - ERROR - Error f241a3e8-5258-48e9-9eb9-755817d0d14d: HTTPException - 
+2025-09-06 18:17:14,201 - signglove - INFO - Response: GET /auth/me - 401

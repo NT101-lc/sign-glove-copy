@@ -16,7 +16,7 @@ ENV_FILE = BASE_DIR / ".env"
 class Settings(BaseSettings):
     # Pydantic config
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=str(ENV_FILE),
         env_file_encoding='utf-8',
         extra='ignore',  # This will ignore extra fields instead of raising validation error
         protected_namespaces=()  # Fix for model_* field conflicts
@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     
     # Database
     MONGO_URI: str = Field("mongodb://localhost:27017", env="MONGO_URI")
-    DB_NAME: str = Field("signglove", env="DB_NAME")
+    DB_NAME: str = Field("sign_glove", env="DB_NAME")
     TEST_DB_NAME: str = "test_signglove"
     # Legacy duplicates removed (ENVIRONMENT/SECRET_KEY/ALGORITHM/ACCESS_TOKEN_EXPIRE_MINUTES)
 
@@ -54,7 +54,7 @@ class Settings(BaseSettings):
     RESULTS_DIR: str = os.path.join(AI_DIR, 'results')
     
     # CORS
-    CORS_ORIGINS: List[str] = Field(["http://localhost:5173"], env="CORS_ORIGINS")
+    CORS_ORIGINS: str = Field("http://localhost:5173", env="CORS_ORIGINS")
 
     # Backend base URL for internal calls and clients
     BACKEND_BASE_URL: str = Field("http://localhost:8000", env="BACKEND_BASE_URL")
@@ -113,19 +113,21 @@ class Settings(BaseSettings):
     # File upload settings
     UPLOAD_DIR: str = Field("uploads", env="UPLOAD_DIR")
     MAX_FILE_SIZE: int = Field(50 * 1024 * 1024, env="MAX_FILE_SIZE")  # 50MB
-    ALLOWED_FILE_TYPES: List[str] = Field([".csv", ".json", ".txt"], env="ALLOWED_FILE_TYPES")
+    ALLOWED_FILE_TYPES: str = Field(".csv,.json,.txt", env="ALLOWED_FILE_TYPES")
     
-    @validator("CORS_ORIGINS", pre=True)
-    def parse_cors_origins(cls, v):
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+    @property
+    def cors_origins_list(self) -> List[str]:
+        """Return CORS origins as a list."""
+        if isinstance(self.CORS_ORIGINS, str):
+            return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
+        return self.CORS_ORIGINS
     
-    @validator("ALLOWED_FILE_TYPES", pre=True)
-    def parse_allowed_file_types(cls, v):
-        if isinstance(v, str):
-            return [file_type.strip() for file_type in v.split(",")]
-        return v
+    @property
+    def allowed_file_types_list(self) -> List[str]:
+        """Return allowed file types as a list."""
+        if isinstance(self.ALLOWED_FILE_TYPES, str):
+            return [file_type.strip() for file_type in self.ALLOWED_FILE_TYPES.split(",")]
+        return self.ALLOWED_FILE_TYPES
     
     @validator("JWT_SECRET_KEY")
     def validate_jwt_secret_key(cls, v):
