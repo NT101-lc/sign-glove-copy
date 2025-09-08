@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#212529">
+    Sign Glove AI System Architecture
+  </text>
+  
+  <!-- Hardware Layer -->
+  <rect x="50" y="60" width="150" height="120" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
+  <text x="125" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1976d2">
+    Hardware Layer
+  </text>
+  <text x="60" y="100" font-family="Arial, sans-serif" font-size="12" fill="#424242">• ESP32 Arduino</text>
+  <text x="60" y="115" font-family="Arial, sans-serif" font-size="12" fill="#424242">• 5x Flex Sensors</text>
+  <text x="60" y="130" font-family="Arial, sans-serif" font-size="12" fill="#424242">• MPU6050 IMU</text>
+  <text x="60" y="145" font-family="Arial, sans-serif" font-size="12" fill="#424242">• Serial Comm</text>
+  <text x="60" y="160" font-family="Arial, sans-serif" font-size="12" fill="#424242">• 115200 Baud</text>
+  
+  <!-- Data Collection -->
+  <rect x="250" y="60" width="150" height="120" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+  <text x="325" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#7b1fa2">
+    Data Collection
+  </text>
+  <text x="260" y="100" font-family="Arial, sans-serif" font-size="12" fill="#424242">• collect_stream.py</text>
+  <text x="260" y="115" font-family="Arial, sans-serif" font-size="12" fill="#424242">• Data Processing</text>
+  <text x="260" y="130" font-family="Arial, sans-serif" font-size="12" fill="#424242">• Regularization</text>
+  <text x="260" y="145" font-family="Arial, sans-serif" font-size="12" fill="#424242">• Normalization</text>
+  <text x="260" y="160" font-family="Arial, sans-serif" font-size="12" fill="#424242">• WebSocket Stream</text>
+  
+  <!-- Backend Services -->
+  <rect x="450" y="60" width="150" height="120" fill="#e8f5e8" stroke="#388e3c" stroke-width="2" rx="5"/>
+  <text x="525" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#388e3c">
+    Backend Services
+  </text>
+  <text x="460" y="100" font-family="Arial, sans-serif" font-size="12" fill="#424242">• FastAPI Server</text>
+  <text x="460" y="115" font-family="Arial, sans-serif" font-size="12" fill="#424242">• WebSocket Server</text>
+  <text x="460" y="130" font-family="Arial, sans-serif" font-size="12" fill="#424242">• TensorFlow Lite</text>
+  <text x="460" y="145" font-family="Arial, sans-serif" font-size="12" fill="#424242">• MongoDB</text>
+  <text x="460" y="160" font-family="Arial, sans-serif" font-size="12" fill="#424242">• JWT Auth</text>
+  
+  <!-- Frontend Interface -->
+  <rect x="650" y="60" width="120" height="120" fill="#fff3e0" stroke="#f57c00" stroke-width="2" rx="5"/>
+  <text x="710" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f57c00">
+    Frontend
+  </text>
+  <text x="660" y="100" font-family="Arial, sans-serif" font-size="12" fill="#424242">• React SPA</text>
+  <text x="660" y="115" font-family="Arial, sans-serif" font-size="12" fill="#424242">• WebSocket Client</text>
+  <text x="660" y="130" font-family="Arial, sans-serif" font-size="12" fill="#424242">• Browser TTS</text>
+  <text x="660" y="145" font-family="Arial, sans-serif" font-size="12" fill="#424242">• Real-time UI</text>
+  <text x="660" y="160" font-family="Arial, sans-serif" font-size="12" fill="#424242">• Responsive</text>
+  
+  <!-- Data Flow Arrows -->
+  <path d="M 200 120 L 250 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M 400 120 L 450 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M 600 120 L 650 120" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+  
+  <!-- ML Pipeline -->
+  <rect x="50" y="220" width="700" height="80" fill="#fce4ec" stroke="#c2185b" stroke-width="2" rx="5"/>
+  <text x="400" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c2185b">
+    Machine Learning Pipeline
+  </text>
+  
+  <rect x="70" y="250" width="120" height="40" fill="#ffebee" stroke="#e91e63" stroke-width="1" rx="3"/>
+  <text x="130" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e91e63">
+    Raw Data Collection
+  </text>
+  
+  <rect x="210" y="250" width="120" height="40" fill="#ffebee" stroke="#e91e63" stroke-width="1" rx="3"/>
+  <text x="270" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e91e63">
+    Preprocessing
+  </text>
+  
+  <rect x="350" y="250" width="120" height="40" fill="#ffebee" stroke="#e91e63" stroke-width="1" rx="3"/>
+  <text x="410" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e91e63">
+    Neural Network Training
+  </text>
+  
+  <rect x="490" y="250" width="120" height="40" fill="#ffebee" stroke="#e91e63" stroke-width="1" rx="3"/>
+  <text x="550" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e91e63">
+    Quantization
+  </text>
+  
+  <rect x="630" y="250" width="120" height="40" fill="#ffebee" stroke="#e91e63" stroke-width="1" rx="3"/>
+  <text x="690" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e91e63">
+    TFLite Model
+  </text>
+  
+  <!-- ML Pipeline Arrows -->
+  <path d="M 190 270 L 210 270" stroke="#e91e63" stroke-width="2" marker-end="url(#arrowhead2)"/>
+  <path d="M 330 270 L 350 270" stroke="#e91e63" stroke-width="2" marker-end="url(#arrowhead2)"/>
+  <path d="M 470 270 L 490 270" stroke="#e91e63" stroke-width="2" marker-end="url(#arrowhead2)"/>
+  <path d="M 610 270 L 630 270" stroke="#e91e63" stroke-width="2" marker-end="url(#arrowhead2)"/>
+  
+  <!-- Arrow marker definition for ML pipeline -->
+  <defs>
+    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e91e63"/>
+    </marker>
+  </defs>
+  
+  <!-- Real-time Flow -->
+  <rect x="50" y="340" width="700" height="60" fill="#e0f2f1" stroke="#00695c" stroke-width="2" rx="5"/>
+  <text x="400" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#00695c">
+    Real-time Prediction Flow
+  </text>
+  <text x="400" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#00695c">
+    Arduino Sensors → Serial → Python Collector → WebSocket → Backend → ML Model → Frontend → TTS
+  </text>
+  
+  <!-- Performance Metrics -->
+  <rect x="50" y="430" width="700" height="120" fill="#f1f8e9" stroke="#558b2f" stroke-width="2" rx="5"/>
+  <text x="400" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#558b2f">
+    Performance Metrics
+  </text>
+  
+  <rect x="70" y="460" width="150" height="70" fill="#e8f5e8" stroke="#4caf50" stroke-width="1" rx="3"/>
+  <text x="145" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#4caf50">
+    Latency
+  </text>
+  <text x="80" y="500" font-family="Arial, sans-serif" font-size="11" fill="#424242">• &lt; 100ms Response</text>
+  <text x="80" y="515" font-family="Arial, sans-serif" font-size="11" fill="#424242">• Sub-second Prediction</text>
+  
+  <rect x="240" y="460" width="150" height="70" fill="#e8f5e8" stroke="#4caf50" stroke-width="1" rx="3"/>
+  <text x="315" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#4caf50">
+    Throughput
+  </text>
+  <text x="250" y="500" font-family="Arial, sans-serif" font-size="11" fill="#424242">• 10 Hz Data Rate</text>
+  <text x="250" y="515" font-family="Arial, sans-serif" font-size="11" fill="#424242">• Real-time Streaming</text>
+  
+  <rect x="410" y="460" width="150" height="70" fill="#e8f5e8" stroke="#4caf50" stroke-width="1" rx="3"/>
+  <text x="485" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#4caf50">
+    Accuracy
+  </text>
+  <text x="420" y="500" font-family="Arial, sans-serif" font-size="11" fill="#424242">• &gt; 95% Recognition</text>
+  <text x="420" y="515" font-family="Arial, sans-serif" font-size="11" fill="#424242">• 7 Gesture Classes</text>
+  
+  <rect x="580" y="460" width="150" height="70" fill="#e8f5e8" stroke="#4caf50" stroke-width="1" rx="3"/>
+  <text x="655" y="480" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#4caf50">
+    Scalability
+  </text>
+  <text x="590" y="500" font-family="Arial, sans-serif" font-size="11" fill="#424242">• Multi-user Support</text>
+  <text x="590" y="515" font-family="Arial, sans-serif" font-size="11" fill="#424242">• Concurrent Connections</text>
+  
+</svg>

@@ -1,34 +1,32 @@
+# collect_stream.py
 import serial
 import time
-import asyncio
-import json
+import requests
 import logging
-import websockets
-import sys, os
-import csv
-
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from processors import regularization
-from core.settings import settings as app_settings
+import numpy as np
+from live_data import update_data  # function to update latest reading for FastAPI
 
 # ---------------- CONFIG ----------------
-SERIAL_PORT = 'COM14'
+SERIAL_PORT = "COM6"
 BAUD_RATE = 115200
+BACKEND_URL = "http://127.0.0.1:8000/gesture/live-predict"
 TOTAL_SENSORS = 11
-MAX_QUEUE_SIZE = 20  # max frames queued before dropping old ones
+SESSION_ID = "demo"
 
-RAW_CSV_PATH = "data/sensor_raw.csv"
-REG_CSV_PATH = "data/sensor_regularized.csv"
+# Flex sensor expected range
+FLEX_MIN = 0.0
+FLEX_MAX = 2800.0
 
-# Ensure data folder exists
-os.makedirs("data", exist_ok=True)
+# IMU ranges
+ACC_MIN, ACC_MAX = -2.0, 2.0  # accelerometer g
+GYRO_MIN, GYRO_MAX = -250.0, 250.0  # gyro deg/sec
+
+# Throttle interval for sending to backend
+SEND_INTERVAL = 1.5  # seconds
 
 # Logger
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-# Regularizer
-reg = regularization.create_regularizer(window_size=5)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger("signglove_live")
 
 # ---------------- HELPERS ----------------
 def connect_arduino():
@@ -44,10 +42,10 @@ def connect_arduino():
 
 def read_sensor_data(ser):
     try:
-        line = ser.readline().decode('utf-8').strip()
+        line = ser.readline().decode("utf-8").strip()
         if not line:
             return None
-        vals = [float(x) for x in line.split(',')]
+        vals = [float(x) for x in line.split(",")]
         if len(vals) != TOTAL_SENSORS:
             return None
         return vals
@@ -55,108 +53,75 @@ def read_sensor_data(ser):
         logger.error(f"Read error: {e}")
         return None
 
-def apply_regularization(values):
-    fingers = values[:5]       # 5 flex sensors
-    ax, ay, az = values[5:8]   # accelerometer
-    gx, gy, gz = values[8:11]  # gyroscope
+def normalize_sensor_data(values):
+    vals = values.copy()
+    # Flex sensors: ESP32 ADC 12-bit (0-4095)
+    for i in range(5):
+        vals[i] = vals[i] / 4095.0  # to [0,1]
+    
+    # Accelerometer: raw to g-force (for ±2g)
+    for i in range(5, 8):
+        vals[i] = vals[i] / 16384.0
+    
+    # Gyroscope: raw to deg/sec (for ±250°/s)
+    for i in range(8, 11):
+        vals[i] = vals[i] / 131.0
+    
+    return vals
 
-    fingers_reg = reg.apply_adaptive_regularization(fingers)
-    roll, pitch, yaw = reg.imu_norm.process(ax, ay, az, gz)
-    roll = reg.exponential_smoothing(roll, 'roll')
-    pitch = reg.exponential_smoothing(pitch, 'pitch')
-    yaw = reg.exponential_smoothing(yaw, 'yaw')
-    gx_n, gy_n, gz_n = reg.imu_norm.normalize_gyro(gx, gy, gz)
-
-    return fingers_reg, [ax, ay, az], [roll, pitch, yaw], [gx_n, gy_n, gz_n]
-
-# ---------------- WEBSOCKET ----------------
-async def send_to_backend(data_queue):
-    ws_url = app_settings.BACKEND_BASE_URL.replace("http://","ws://").replace("https://","wss://") + "/ws/stream"
-    logger.info(f"Connecting to WebSocket: {ws_url}")
-
-    while True:
-        try:
-            async with websockets.connect(ws_url, ping_interval=20, ping_timeout=20) as ws:
-                logger.info(f"Connected to WS: {ws_url}")
-                while True:
-                    if not data_queue:
-                        await asyncio.sleep(0.01)
-                        continue
-                    data = data_queue.pop(0)
-                    try:
-                        await ws.send(json.dumps(data))
-                    except Exception as e:
-                        logger.warning(f"Send error, reconnecting: {e}")
-                        break
-                    await asyncio.sleep(0.005)
-        except Exception as e:
-            logger.warning(f"WebSocket reconnect in 2s: {e}")
-            await asyncio.sleep(2)
+def send_to_backend(sensor_values):
+    payload = {
+        "values": sensor_values,
+        "session_id": SESSION_ID
+    }
+    try:
+        response = requests.post(BACKEND_URL, json=payload, timeout=2.0)
+        if response.status_code == 200:
+            data = response.json()
+            pred_label = data.get("prediction")
+            confidence = data.get("confidence")
+            logger.info(f"Prediction: {pred_label} | Confidence: {confidence:.2f}")
+        elif response.status_code == 429:
+            logger.warning("Backend rate limit exceeded")
+        else:
+            logger.warning(f"Backend returned {response.status_code}: {response.text}")
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error sending data to backend: {e}")
 
 # ---------------- MAIN LOOP ----------------
-async def main():
+def main():
     ser = connect_arduino()
     if not ser:
         return
 
-    data_queue = []
+    latest_reading = None
+    last_sent_values = None
+    last_send_time = 0
 
-    # Prepare CSV files
-    first_run = not (os.path.exists(RAW_CSV_PATH) and os.path.exists(REG_CSV_PATH))
-    with open(RAW_CSV_PATH, "a", newline="") as raw_file, \
-         open(REG_CSV_PATH, "a", newline="") as reg_file:
+    try:
+        while True:
+            sensor_values = read_sensor_data(ser)
+            if sensor_values:
+                normalized = normalize_sensor_data(sensor_values)
+                update_data(normalized)  # update live reading for FastAPI
+                latest_reading = normalized
 
-        raw_writer = csv.writer(raw_file)
-        reg_writer = csv.writer(reg_file)
+            # --- Send to backend only if changed AND interval elapsed ---
+            now = time.time()
+            if latest_reading and (now - last_send_time >= SEND_INTERVAL):
+                if last_sent_values != latest_reading:
+                    send_to_backend(latest_reading)
+                    last_sent_values = latest_reading
+                last_send_time = now
 
-        # Write headers if first run
-        if first_run:
-            raw_writer.writerow(["flex1","flex2","flex3","flex4","flex5","accX","accY","accZ","gyroX","gyroY","gyroZ","timestamp"])
-            reg_writer.writerow(["finger1","finger2","finger3","finger4","finger5","accX","accY","accZ","roll","pitch","yaw","gx_n","gy_n","gz_n","timestamp"])
+            time.sleep(0.01)
+    except KeyboardInterrupt:
+        logger.info("Stopped by user")
+    finally:
+        if ser and ser.is_open:
+            ser.close()
+            logger.info("Serial connection closed.")
 
-        ws_task = asyncio.create_task(send_to_backend(data_queue))
-        logger.info("Starting live data collection...")
-
-        try:
-            while True:
-                vals = read_sensor_data(ser)
-                if vals:
-                    timestamp = time.time()
-
-                    # Log raw data
-                    raw_writer.writerow(vals + [timestamp])
-                    raw_file.flush()
-
-                    # Regularize
-                    fingers_reg, acc, imu_angles, gyro_norm = apply_regularization(vals)
-
-                    # Log regularized data
-                    reg_writer.writerow(fingers_reg + acc + imu_angles + gyro_norm + [timestamp])
-                    reg_file.flush()
-
-                    # Prepare payload for WebSocket
-                    payload = {
-                        "right": fingers_reg + acc + imu_angles + gyro_norm,  # 11 features
-                        "timestamp": timestamp
-                    }
-
-                    if len(data_queue) >= MAX_QUEUE_SIZE:
-                        data_queue.pop(0)
-                    data_queue.append(payload)
-
-                await asyncio.sleep(0.005)
-
-        except KeyboardInterrupt:
-            logger.info("Live collection stopped by user.")
-        finally:
-            if ser and ser.is_open:
-                ser.close()
-                logger.info("Serial connection closed.")
-            ws_task.cancel()
-            try:
-                await ws_task
-            except asyncio.CancelledError:
-                pass
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

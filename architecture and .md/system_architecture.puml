@@ -1,0 +1,88 @@
+@startuml Sign Glove System Architecture
+
+!define RECTANGLE class
+
+package "Hardware Layer" {
+    RECTANGLE ESP32 [
+        ESP32 Arduino
+        - Serial Communication
+        - Sensor Data Collection
+    ]
+    
+    RECTANGLE FlexSensors [
+        5x Flex Sensors
+        - Finger Bend Detection
+        - Analog Values (0-1023)
+    ]
+    
+    RECTANGLE IMU [
+        MPU6050 IMU
+        - Accelerometer (3-axis)
+        - Gyroscope (3-axis)
+    ]
+}
+
+package "Data Collection" {
+    RECTANGLE Collector [
+        collect_stream.py
+        - Real-time Streaming
+        - Data Regularization
+    ]
+    
+    RECTANGLE Processor [
+        Data Processing
+        - Noise Reduction
+        - Normalization
+    ]
+}
+
+package "Backend Services" {
+    RECTANGLE FastAPI [
+        FastAPI Server
+        - REST API
+        - WebSocket Server
+        - Authentication
+    ]
+    
+    RECTANGLE MLModel [
+        TensorFlow Lite
+        - Gesture Recognition
+        - Real-time Inference
+    ]
+    
+    RECTANGLE Database [
+        MongoDB
+        - User Data
+        - Training Data
+        - System Logs
+    ]
+}
+
+package "Frontend Interface" {
+    RECTANGLE React [
+        React SPA
+        - Live Prediction UI
+        - Dashboard
+        - Admin Tools
+    ]
+    
+    RECTANGLE TTS [
+        Browser TTS
+        - Speech Synthesis
+        - Voice Selection
+        - Queue Management
+    ]
+}
+
+ESP32 --> Collector : Serial Data
+FlexSensors --> ESP32
+IMU --> ESP32
+Collector --> Processor
+Processor --> FastAPI : WebSocket
+FastAPI --> MLModel
+MLModel --> FastAPI
+FastAPI --> React : WebSocket
+React --> TTS
+Database --> FastAPI
+
+@enduml

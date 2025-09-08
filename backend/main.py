@@ -4,9 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exception_handlers import RequestValidationError
 from routes import training_routes, sensor_routes, predict_routes, admin_routes, dashboard_routes
-from routes import gestures, liveWS, utils_routes, auth_routes, voice_routes
+from routes import gestures, utils_routes, auth_routes, voice_routes, live_predict
 from routes import model_status
 from routes import audio_files_routes
+from ingestion.live_data import get_latest_data
 from core.indexes import create_indexes 
 from core.database import client, test_connection
 from core.settings import settings
@@ -36,8 +37,6 @@ async def lifespan(app: FastAPI):
     logging.info("Indexes created. App is starting...")
     
     # Start the prediction worker for real-time predictions
-    from routes.liveWS import start_prediction_worker
-    await start_prediction_worker()
     
     yield
     client.close()
@@ -65,7 +64,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
 # Use CORS origins from settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -79,11 +78,11 @@ app.include_router(sensor_routes.router)
 app.include_router(predict_routes.router)
 app.include_router(admin_routes.router)
 app.include_router(dashboard_routes.router)
-app.include_router(liveWS.router)
 app.include_router(utils_routes.router)
 app.include_router(audio_files_routes.router)
 app.include_router(voice_routes.router)
 app.include_router(model_status.router)
+app.include_router(live_predict.router)
 
 # Mount models directory for static files if needed
 app.mount("/models", StaticFiles(directory=settings.DATA_DIR), name="models")
@@ -114,3 +113,9 @@ async def get_metrics():
         "performance": performance_monitor.get_performance_stats(),
         "errors": len(error_tracker.error_log)
     }
+@app.get("/gesture/latest")
+async def latest_sensor():
+    data = get_latest_data()
+    if data is None:
+        return {"values": [], "real_sensor": False}
+    return {"values": data, "real_sensor": True}

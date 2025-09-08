@@ -12,7 +12,7 @@ from collections import deque
 from typing import List, Dict, Optional
 import math
 import numpy as np
-from processors.imu_normalizer import IMUNormalizer
+from imu_normalizer import IMUNormalizer
 
 # Initialize global IMU normalizer (using your enhanced class)
 imu_norm = IMUNormalizer()
@@ -193,8 +193,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
     regularizer = create_regularizer()
-    input_file = r'D:\study\output\sign-glove\backend\data\raw_data.csv'
-    output_file = r'D:\study\output\sign-glove\backend\data\clean_data.csv'
+    input_file = r'F:\new\backend\data\demo_data.csv'
+    output_file = r'F:\new\backend\data\superdemo_data.csv'
     print(f"Processing {input_file} ...")
     rows = regularizer.process_csv_file(input_file, output_file, method='adaptive')
     print(f"Done! Processed {rows} rows. Output saved to {output_file}")
