@@ -5,7 +5,7 @@ Endpoints:
 - GET /admin/: Admin API root/status
 - DELETE /admin/sensor-data: Delete all sensor data.
 - DELETE /admin/training-results: Delete all training results and metrics JSON.
-- DELETE /admin/model-files: Delete all model files (.tflite).
+- DELETE /admin/model-files: Delete all model files .
 - DELETE /admin/training-visualizations: Delete training plots and results directory.
 - DELETE /admin/csv-data: Delete all CSV data files.
 - DELETE /admin/all-training-data: Comprehensive cleanup of all training artifacts.
@@ -62,78 +62,32 @@ async def clear_training_results(_user=Depends(role_or_internal_dep("editor"))):
 @router.delete("/model-files")
 async def clear_model_files(_user=Depends(role_or_internal_dep("editor"))):
     """
-    Delete all model files (.tflite files).
+    Delete all model files (.h5 or .tflite files).
     """
     try:
         deleted_files = []
         ai_dir = Path("AI")
         
         if ai_dir.exists():
-            # Find and delete all .tflite files
-            for model_file in ai_dir.glob("*.tflite"):
-                model_file.unlink()
-                deleted_files.append(model_file.name)
-                logging.info(f"Deleted model file: {model_file.name}")
+            # Delete all H5 and TFLite files
+            for ext in ("*.h5", "*.tflite"):
+                for model_file in ai_dir.glob(ext):
+                    model_file.unlink()
+                    deleted_files.append(model_file.name)
+                    logging.info(f"Deleted model file: {model_file.name}")
         
         return {"status": "success", "deleted_files": deleted_files}
     except Exception as e:
         logging.error(f"Failed to clear model files: {e}")
         raise HTTPException(status_code=500, detail="Failed to clear model files")
 
-@router.delete("/training-visualizations")
-async def clear_training_visualizations(_user=Depends(role_or_internal_dep("editor"))):
-    """
-    Delete training visualization plots and clear results directory.
-    """
-    try:
-        deleted_items = []
-        
-        # Clear AI/results directory
-        results_dir = Path("AI/results")
-        if results_dir.exists():
-            for item in results_dir.iterdir():
-                if item.is_file():
-                    item.unlink()
-                    deleted_items.append(f"results/{item.name}")
-                elif item.is_dir():
-                    shutil.rmtree(item)
-                    deleted_items.append(f"results/{item.name}/")
-            logging.info(f"Cleared results directory: {len(deleted_items)} items")
-        
-        return {"status": "success", "deleted_items": deleted_items}
-    except Exception as e:
-        logging.error(f"Failed to clear training visualizations: {e}")
-        raise HTTPException(status_code=500, detail="Failed to clear training visualizations")
-
-@router.delete("/csv-data")
-async def clear_csv_data(_user=Depends(role_or_internal_dep("editor"))):
-    """
-    Delete all CSV data files.
-    """
-    try:
-        deleted_files = []
-        data_dir = Path("data")
-        
-        if data_dir.exists():
-            # Delete specific CSV files
-            csv_files = ["raw_data.csv", "gesture_data.csv"]
-            for csv_file in csv_files:
-                file_path = data_dir / csv_file
-                if file_path.exists():
-                    file_path.unlink()
-                    deleted_files.append(csv_file)
-                    logging.info(f"Deleted CSV file: {csv_file}")
-        
-        return {"status": "success", "deleted_files": deleted_files}
-    except Exception as e:
-        logging.error(f"Failed to clear CSV data: {e}")
-        raise HTTPException(status_code=500, detail="Failed to clear CSV data")
 
 @router.delete("/all-training-data")
 async def clear_all_training_data(_user=Depends(role_or_internal_dep("editor"))):
     """
     Comprehensive cleanup: Delete all training-related data including database records,
     CSV files, model files, training metrics, and visualization plots.
+    Supports both .h5 and .tflite models.
     """
     try:
         summary = {
@@ -161,13 +115,14 @@ async def clear_all_training_data(_user=Depends(role_or_internal_dep("editor")))
         except Exception as e:
             summary["errors"].append(f"Metrics file cleanup failed: {str(e)}")
         
-        # Clear model files
+        # Clear model files (H5 + TFLite)
         try:
             ai_dir = Path("AI")
             if ai_dir.exists():
-                for model_file in ai_dir.glob("*.tflite"):
-                    model_file.unlink()
-                    summary["deleted_files"].append(model_file.name)
+                for ext in ("*.h5", "*.tflite"):
+                    for model_file in ai_dir.glob(ext):
+                        model_file.unlink()
+                        summary["deleted_files"].append(model_file.name)
         except Exception as e:
             summary["errors"].append(f"Model files cleanup failed: {str(e)}")
         

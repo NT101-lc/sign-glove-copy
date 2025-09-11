@@ -4,6 +4,7 @@ Loads all configuration from environment variables or defaults.
 """
 from pydantic_settings import BaseSettings
 from pydantic import Field, validator
+from typing import ClassVar
 from typing import List, Dict, Any, Optional, ClassVar
 import os
 from pathlib import Path
@@ -39,19 +40,24 @@ class Settings(BaseSettings):
     # Legacy duplicates removed (ENVIRONMENT/SECRET_KEY/ALGORITHM/ACCESS_TOKEN_EXPIRE_MINUTES)
 
     
-    # Model/data paths
-    BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    DATA_DIR: str = os.path.join(BASE_DIR, 'data')
-    AI_DIR: str = os.path.join(BASE_DIR, 'AI')
-    RAW_DATA_PATH: str = os.path.join(DATA_DIR, 'raw_data.csv')
-    CLEAN_DATA_PATH: str = os.path.join(DATA_DIR, 'clean_data.csv')
-    GESTURE_DATA_PATH: str = os.path.join(DATA_DIR, 'gesture_data.csv')
-    RAW_DUALHAND_DATA_PATH: str = os.path.join(DATA_DIR, 'raw_dualhand_data.csv')
-    GESTURE_DUALHAND_DATA_PATH: str = os.path.join(DATA_DIR, 'gesture_dualhand.csv')
-    MODEL_PATH: str = os.path.join(AI_DIR, 'gesture_model.tflite')
-    MODEL_DUAL_PATH: str = os.path.join(AI_DIR, 'gesture_model_dual.tflite')
-    METRICS_PATH: str = os.path.join(AI_DIR, 'training_metrics.json')
-    RESULTS_DIR: str = os.path.join(AI_DIR, 'results')
+    BASE_DIR: ClassVar[str] = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    DATA_DIR: ClassVar[str] = os.path.join(BASE_DIR, 'data')
+    AI_DIR: ClassVar[str] = os.path.join(BASE_DIR, 'AI')
+
+    # Data paths
+    RAW_DATA_PATH: ClassVar[str] = os.path.join(DATA_DIR, 'raw_data.csv')
+    CLEAN_DATA_PATH: ClassVar[str] = os.path.join(DATA_DIR, 'clean_data.csv')
+    GESTURE_DATA_PATH: ClassVar[str] = os.path.join(DATA_DIR, 'models', 'gesture_data.csv')
+
+    # Model / Results
+    MODEL_DIR: ClassVar[str] = os.path.join(AI_DIR, 'models')
+    MODEL_PATH: ClassVar[str] = os.path.join(MODEL_DIR, 'gesture_model_fold1.h5')
+    MODEL_PATH_TEMPLATE: ClassVar[str] = os.path.join(MODEL_DIR, 'gesture_model_fold{}.h5')
+
+    RESULTS_DIR: ClassVar[str] = os.path.join(AI_DIR, 'results')
+    SCALER_PATH: ClassVar[str] = os.path.join(RESULTS_DIR, 'scaler.pkl')
+    ENCODER_PATH: ClassVar[str] = os.path.join(RESULTS_DIR, 'label_encoder.pkl')
+    METRICS_PATH: ClassVar[str] = os.path.join(RESULTS_DIR, 'training_metrics.json')
     
     # CORS
     CORS_ORIGINS: str = Field("http://localhost:5173", env="CORS_ORIGINS")

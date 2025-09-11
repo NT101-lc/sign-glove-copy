@@ -1,16 +1,20 @@
+from routes import gestures_predict
+from fastapi import WebSocket, WebSocketDisconnect
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exception_handlers import RequestValidationError
-from routes import training_routes, sensor_routes, predict_routes, admin_routes, dashboard_routes
-from routes import gestures, utils_routes, auth_routes, voice_routes, live_predict
+from routes import training_routes, sensor_routes, admin_routes, dashboard_routes
+from routes import gestures, utils_routes, auth_routes, voice_routes
+from AI.gesture_model_inference import preprocess_frame, predict_gesture
 from routes import model_status
 from routes import audio_files_routes
-from ingestion.live_data import get_latest_data
+from ingestion.streaming.live_data import get_latest_data
 from core.indexes import create_indexes 
 from core.database import client, test_connection
 from core.settings import settings
+from core.model import model, predict_gesture  # Ensure H5 model is loaded
 from routes.auth_routes import (
     role_required_dep as role_required,
     role_or_internal_dep as role_or_internal,
@@ -35,13 +39,16 @@ async def lifespan(app: FastAPI):
     await create_indexes()
     await ensure_default_editor()
     logging.info("Indexes created. App is starting...")
-    
-    # Start the prediction worker for real-time predictions
-    
+
+    # Check AI model
+    if model is None:
+        logging.error("H5 model is NOT loaded! WebSocket predictions will fail.")
+    else:
+        logging.info(f"H5 model loaded successfully from: {settings.MODEL_PATH}")
+
     yield
     client.close()
     logging.info("MongoDB connection closed. App is shutting down...")
-
 
 app = FastAPI(title="Sign Glove API", lifespan=lifespan)
 
@@ -64,7 +71,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
 # Use CORS origins from settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -75,14 +82,13 @@ app.include_router(auth_routes.router)
 app.include_router(gestures.router)
 app.include_router(training_routes.router)
 app.include_router(sensor_routes.router)
-app.include_router(predict_routes.router)
+app.include_router(gestures_predict.router)
 app.include_router(admin_routes.router)
 app.include_router(dashboard_routes.router)
 app.include_router(utils_routes.router)
 app.include_router(audio_files_routes.router)
 app.include_router(voice_routes.router)
 app.include_router(model_status.router)
-app.include_router(live_predict.router)
 
 # Mount models directory for static files if needed
 app.mount("/models", StaticFiles(directory=settings.DATA_DIR), name="models")
@@ -119,3 +125,24 @@ async def latest_sensor():
     if data is None:
         return {"values": [], "real_sensor": False}
     return {"values": data, "real_sensor": True}
+
+@app.websocket("/gesture/predict_ws")
+async def predict_ws(ws: WebSocket):
+    await ws.accept()
+    try:
+        while True:
+            data = await ws.receive_json()
+            values = data.get("values", [])
+            
+            if not values:
+                await ws.send_json({"status": "error", "message": "No input values"})
+                continue
+            
+            result = predict_gesture(values)
+            await ws.send_json(result)
+
+    except WebSocketDisconnect:
+        logging.info("WebSocket client disconnected")
+    except Exception as e:
+        logging.error(f"WebSocket prediction error: {e}")
+        await ws.close()

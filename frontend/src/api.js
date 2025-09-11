@@ -19,20 +19,47 @@ export async function apiRequest(method, url, data = null, config = {}) {
     });
     return res.data;
   } catch (err) {
-    // Extract error message and trace_id if available
     const detail = err.response?.data?.detail || err.message;
     const traceId = err.response?.data?.trace_id;
     throw { detail, traceId, status: err.response?.status };
   }
 }
 
-// Gesture API functions
+// ===================== WebSocket Helper =====================
+export function createWebSocket(path = '/ws', onMessage = null, onOpen = null, onClose = null) {
+  if (typeof window === 'undefined') return null;
+
+  const token = localStorage.getItem('access_token');
+  const url = `${BASE_URL.replace(/^http/, 'ws')}${path}?token=${token}`;
+
+  const ws = new WebSocket(url);
+
+  ws.onopen = (event) => {
+    console.log('WebSocket connected');
+    if (onOpen) onOpen(event);
+  };
+
+  ws.onmessage = (event) => {
+    if (onMessage) onMessage(event.data);
+  };
+
+  ws.onclose = (event) => {
+    console.log('WebSocket closed', event);
+    if (onClose) onClose(event);
+  };
+
+  ws.onerror = (err) => console.error('WebSocket error:', err);
+
+  return ws;
+}
+
+// ===================== Gesture API =====================
 export const getGestures = () => apiRequest('get', '/gestures');
 export const createGesture = (payload) => apiRequest('post', '/gestures/', payload);
 export const deleteGesture = (sessionId) => apiRequest('delete', `/gestures/${sessionId}`);
 export const updateGesture = (sessionId, label) => apiRequest('put', `/gestures/${sessionId}?label=${label}`);
 
-// Training API functions
+// ===================== Training API =====================
 export const getTrainingResults = () => apiRequest('get', '/training/');
 export const getLatestTrainingResult = () => apiRequest('get', '/training/latest');
 export const getTrainingMetrics = () => apiRequest('get', '/training/metrics/latest');
@@ -45,7 +72,7 @@ export const runTraining = (file, dualHand = false) => {
   });
 };
 
-// Dual-hand specific training functions
+// ===================== Dual-hand Training =====================
 export const triggerDualHandTraining = () => apiRequest('post', '/training/dual-hand/trigger');
 export const runDualHandTraining = (file) => {
   const formData = new FormData();
@@ -57,11 +84,11 @@ export const runDualHandTraining = (file) => {
 export const getDualHandData = () => apiRequest('get', '/training/dual-hand/data');
 export const getDataInfo = () => apiRequest('get', '/training/data/info');
 
-// Gesture conversion functions
+// ===================== Gesture Conversion =====================
 export const convertGestureToDualHand = (sessionId) => apiRequest('post', `/training/convert-to-dual-hand/${sessionId}`);
 export const checkConversionStatus = (sessionId) => apiRequest('get', `/training/conversion-status/${sessionId}`);
 
-// Audio API functions
+// ===================== Audio API =====================
 export const getAudioFiles = () => apiRequest('get', '/audio-files/');
 export const uploadAudioFile = (file, uploader = 'unknown') => {
   const formData = new FormData();
@@ -75,6 +102,7 @@ export const deleteAudioFile = (filename) => apiRequest('delete', `/audio-files/
 export const playAudioOnESP32 = (filename) => apiRequest('post', `/audio-files/${filename}/play`);
 export const playAudioOnLaptop = (filename) => apiRequest('post', `/audio-files/${filename}/play-laptop`); 
 
+// ===================== Export =====================
 export const api = {
   // Gestures
   getGestures,
@@ -101,6 +129,8 @@ export const api = {
   deleteAudioFile,
   playAudioOnESP32,
   playAudioOnLaptop,
+  // WebSocket
+  createWebSocket,
   // Core
   request: apiRequest,
 };

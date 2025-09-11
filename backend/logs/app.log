@@ -27767,3 +27767,271 @@ Arguments received by Sequential.call():
 2025-09-08 11:28:17,659 - signglove - INFO - Response: POST /gesture/live-predict - 200
 2025-09-08 11:28:17,799 - signglove - INFO - Request: GET /gesture/latest
 2025-09-08 11:28:17,804 - signglove - INFO - Response: GET /gesture/latest - 200
+2025-09-11 11:20:42,904 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 11:20:43,541 - root - INFO - Indexes created. App is starting...
+2025-09-11 11:22:53,718 - signglove - INFO - Request: POST /auth/login
+2025-09-11 11:22:53,781 - signglove - ERROR - Error deea1998-a0ee-438b-831f-2e9c0fdabb9b: HTTPException - 
+2025-09-11 11:22:53,782 - signglove - INFO - Response: POST /auth/login - 401
+2025-09-11 11:22:58,669 - signglove - INFO - Request: POST /auth/login
+2025-09-11 11:22:58,756 - signglove - ERROR - Error 4f2ba5e4-15b7-459b-aae5-a3633d5c28f9: HTTPException - 
+2025-09-11 11:22:58,757 - signglove - INFO - Response: POST /auth/login - 401
+2025-09-11 11:23:09,031 - signglove - INFO - Request: GET /auth/login
+2025-09-11 11:23:09,033 - signglove - INFO - Response: GET /auth/login - 405
+2025-09-11 11:23:57,825 - signglove - INFO - Request: POST /auth/login
+2025-09-11 11:23:57,877 - signglove - ERROR - Error 4ade2cbc-523d-4bcc-8481-f08a87347af1: HTTPException - 
+2025-09-11 11:23:57,878 - signglove - INFO - Response: POST /auth/login - 401
+2025-09-11 11:26:52,294 - signglove - INFO - Request: POST /auth/login
+2025-09-11 11:26:52,386 - signglove - ERROR - Error 3508a11f-01e9-4c62-aa17-328f9f7c9f7b: HTTPException - 
+2025-09-11 11:26:52,387 - signglove - INFO - Response: POST /auth/login - 401
+2025-09-11 11:27:12,916 - signglove - INFO - Request: POST /auth/login
+2025-09-11 11:27:12,971 - signglove - ERROR - Error b8df7f5c-c05c-4874-ba3a-acee29fa4171: HTTPException - 
+2025-09-11 11:27:12,972 - signglove - INFO - Response: POST /auth/login - 401
+2025-09-11 11:27:53,428 - signglove - INFO - Request: POST /auth/login
+2025-09-11 11:27:53,691 - signglove - INFO - Response: POST /auth/login - 200
+2025-09-11 11:27:53,697 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:27:53,753 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:28:05,486 - signglove - INFO - Request: GET /training/
+2025-09-11 11:28:05,487 - signglove - INFO - Request: GET /training/metrics/latest
+2025-09-11 11:28:05,488 - signglove - INFO - Request: GET /model/status
+2025-09-11 11:28:05,492 - signglove - INFO - Response: GET /training/metrics/latest - 200
+2025-09-11 11:28:05,493 - signglove - INFO - Response: GET /model/status - 200
+2025-09-11 11:28:05,500 - signglove - INFO - Request: GET /training/metrics/latest
+2025-09-11 11:28:05,501 - signglove - INFO - Request: GET /model/status
+2025-09-11 11:28:05,506 - signglove - INFO - Response: GET /training/metrics/latest - 200
+2025-09-11 11:28:05,506 - signglove - INFO - Response: GET /model/status - 200
+2025-09-11 11:28:05,545 - root - INFO - Fetched 10 training results
+2025-09-11 11:28:05,546 - signglove - INFO - Response: GET /training/ - 200
+2025-09-11 11:28:05,552 - signglove - INFO - Request: GET /training/
+2025-09-11 11:28:05,554 - signglove - INFO - Response: GET /training/ - 200
+2025-09-11 11:28:08,002 - signglove - INFO - Request: GET /audio-files/
+2025-09-11 11:28:08,082 - signglove - INFO - Response: GET /audio-files/ - 200
+2025-09-11 11:28:08,087 - signglove - INFO - Request: GET /audio-files/
+2025-09-11 11:28:08,139 - signglove - INFO - Response: GET /audio-files/ - 200
+2025-09-11 11:28:22,226 - signglove - INFO - Request: GET /audio-files/
+2025-09-11 11:28:22,291 - signglove - INFO - Response: GET /audio-files/ - 200
+2025-09-11 11:28:22,295 - signglove - INFO - Request: GET /audio-files/
+2025-09-11 11:28:22,358 - signglove - INFO - Response: GET /audio-files/ - 200
+2025-09-11 11:35:20,639 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 11:42:31,889 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 11:42:32,822 - root - INFO - Indexes created. App is starting...
+2025-09-11 11:42:32,826 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:32,826 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:32,882 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:33,075 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:33,127 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:33,131 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:33,182 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:33,186 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:37,594 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:37,658 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:37,661 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:37,721 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:48,513 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:48,576 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:48,582 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:48,641 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:49,551 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:49,613 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:49,618 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:49,681 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:50,102 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:50,161 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:50,170 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:50,229 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:50,351 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:50,414 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:50,422 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:50,485 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:51,601 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:51,603 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:42:51,662 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:42:51,669 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:43:08,069 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:43:08,131 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:43:08,136 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:43:08,196 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:45:54,560 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:45:54,623 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:45:54,628 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:45:54,692 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:48:56,443 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 11:49:03,012 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 11:49:03,857 - root - INFO - Indexes created. App is starting...
+2025-09-11 11:49:39,047 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:49:39,124 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:49:39,129 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:49:39,204 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:49:59,901 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 11:51:56,028 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 11:51:56,801 - root - INFO - Indexes created. App is starting...
+2025-09-11 11:54:00,578 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 11:54:06,869 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 11:54:07,722 - root - INFO - Indexes created. App is starting...
+2025-09-11 11:54:10,535 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:54:10,615 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:54:10,619 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:54:10,696 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:54:20,732 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:54:20,734 - signglove - INFO - Request: GET /auth/me
+2025-09-11 11:54:20,805 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 11:54:21,129 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:00:14,820 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:00:14,899 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:00:14,904 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:00:14,988 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:01:38,561 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:01:38,564 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:01:38,632 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:01:38,639 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:03:41,893 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:03:41,967 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:03:41,971 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:03:42,045 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:04:33,540 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:04:33,541 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:04:33,606 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:04:33,612 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:06:49,071 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:06:49,145 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:06:49,150 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:06:49,225 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:24:24,325 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 12:24:30,802 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 12:24:31,515 - root - INFO - Indexes created. App is starting...
+2025-09-11 12:24:42,230 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 12:24:48,373 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 12:24:49,045 - root - INFO - Indexes created. App is starting...
+2025-09-11 12:25:26,079 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:25:26,140 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:25:26,143 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:25:26,201 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:26:02,065 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:26:02,121 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:26:02,125 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:26:02,184 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:26:58,065 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:26:58,118 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:26:58,122 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:26:58,177 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:27:02,558 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:27:02,615 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:27:02,619 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:27:02,674 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:27:03,497 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:27:03,554 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:27:03,557 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:27:03,614 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:27:53,083 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:27:53,138 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:27:53,142 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:27:53,200 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:31:33,661 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 12:31:34,434 - root - INFO - Indexes created. App is starting...
+2025-09-11 12:43:31,191 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 12:43:38,003 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 12:43:38,843 - root - INFO - Indexes created. App is starting...
+2025-09-11 12:43:57,975 - signglove - INFO - Request: POST /auth/login
+2025-09-11 12:43:58,318 - signglove - INFO - Response: POST /auth/login - 200
+2025-09-11 12:43:58,326 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:43:58,396 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:42,141 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:42,208 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:42,212 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:42,279 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:44,123 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:44,218 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:44,222 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:44,290 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:44,807 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:44,874 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:44,878 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:44,942 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:45,222 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:45,290 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:45,293 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:45,362 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:45,812 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:45,878 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:45,882 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:45,950 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:46,316 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:46,382 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:45:46,386 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:45:46,454 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:46:19,165 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:46:19,232 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:46:19,239 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:46:19,313 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:46:20,536 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:46:20,605 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:46:20,609 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:46:20,676 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:47:55,817 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:47:55,885 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:47:55,889 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:47:55,953 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:07,658 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:07,713 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:07,717 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:07,774 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:08,349 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:08,412 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:08,416 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:08,480 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:08,755 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:08,816 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:08,820 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:08,884 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:09,153 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:09,241 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:09,245 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:09,307 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:10,239 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:10,300 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 12:48:10,303 - signglove - INFO - Request: GET /auth/me
+2025-09-11 12:48:10,364 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 13:11:40,329 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 13:11:46,680 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 13:11:47,354 - root - INFO - Indexes created. App is starting...
+2025-09-11 13:11:53,243 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 13:11:54,011 - root - INFO - Indexes created. App is starting...
+2025-09-11 13:13:41,201 - signglove - INFO - Request: GET /auth/me
+2025-09-11 13:13:41,260 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 13:13:41,264 - signglove - INFO - Request: GET /auth/me
+2025-09-11 13:13:41,317 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 13:14:13,350 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 13:14:19,859 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 13:14:20,599 - root - INFO - Indexes created. App is starting...
+2025-09-11 13:14:50,999 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 13:14:57,245 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 13:14:58,092 - root - INFO - Indexes created. App is starting...
+2025-09-11 13:15:04,474 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 13:15:05,321 - root - INFO - Indexes created. App is starting...
+2025-09-11 14:30:39,490 - signglove - INFO - Request: GET /auth/me
+2025-09-11 14:30:39,497 - signglove - ERROR - Error c09c8c35-c59b-46dd-8165-d23160eb5a50: HTTPException - 
+2025-09-11 14:30:39,498 - signglove - INFO - Response: GET /auth/me - 401
+2025-09-11 14:30:39,503 - signglove - INFO - Request: GET /auth/me
+2025-09-11 14:30:39,504 - signglove - ERROR - Error 0569760a-6c2b-478e-ad3c-27a3f5d1d9e6: HTTPException - 
+2025-09-11 14:30:39,505 - signglove - INFO - Response: GET /auth/me - 401
+2025-09-11 14:30:54,590 - signglove - INFO - Request: POST /auth/login
+2025-09-11 14:30:54,910 - signglove - INFO - Response: POST /auth/login - 200
+2025-09-11 14:30:54,916 - signglove - INFO - Request: GET /auth/me
+2025-09-11 14:30:54,973 - signglove - INFO - Response: GET /auth/me - 200
+2025-09-11 14:42:44,076 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 14:42:51,087 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 14:42:52,156 - root - INFO - Indexes created. App is starting...
+2025-09-11 14:42:55,831 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 14:43:02,284 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 14:43:03,228 - root - INFO - Indexes created. App is starting...
+2025-09-11 14:46:03,124 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 14:46:10,022 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 14:46:10,774 - root - INFO - Indexes created. App is starting...
+2025-09-11 14:48:49,163 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 14:48:55,617 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 14:48:56,670 - root - INFO - Indexes created. App is starting...
+2025-09-11 14:49:10,609 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 14:49:16,883 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 14:49:17,515 - root - INFO - Indexes created. App is starting...
+2025-09-11 14:51:01,221 - root - INFO - MongoDB connection closed. App is shutting down...
+2025-09-11 14:51:08,104 - core.database - INFO - Connected to MongoDB Atlas!
+2025-09-11 14:51:09,136 - root - INFO - Indexes created. App is starting...

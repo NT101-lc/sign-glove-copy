@@ -1,26 +1,54 @@
 # core/model.py
-
-import numpy as np
-import tensorflow as tf
 import os
 import logging
+import numpy as np
+from tensorflow.keras.models import load_model
 from core.settings import settings
+import pickle
 
-# Initialize logger
 logger = logging.getLogger("signglove")
 
-# ---------------- Load TFLite model once ----------------
-if not os.path.exists(settings.MODEL_PATH):
-    logger.error(f"TFLite model not found at {settings.MODEL_PATH}")
-    interpreter = None
-else:
-    interpreter = tf.lite.Interpreter(model_path=settings.MODEL_PATH)
-    interpreter.allocate_tensors()
-    input_details = interpreter.get_input_details()
-    output_details = interpreter.get_output_details()
-    logger.info(f"Loaded TFLite model from {settings.MODEL_PATH}")
+# ---------------- Load model safely ----------------
+model = None
+scaler = None
+label_encoder = None
 
-# ---------------- Label map ----------------
+# Load Keras H5 model
+try:
+    if os.path.exists(settings.MODEL_PATH):
+        model = load_model(settings.MODEL_PATH)
+        logger.info(f"Loaded Keras H5 model from {settings.MODEL_PATH}")
+    else:
+        logger.warning(f"[Warning] Model file not found at {settings.MODEL_PATH}. Model will not be loaded.")
+except Exception as e:
+    logger.error(f"Failed to load model: {e}")
+    model = None
+
+# Load scaler
+try:
+    if os.path.exists(settings.SCALER_PATH):
+        with open(settings.SCALER_PATH, "rb") as f:
+            scaler = pickle.load(f)
+        logger.info(f"Loaded scaler from {settings.SCALER_PATH}")
+    else:
+        logger.warning(f"[Warning] Scaler file not found at {settings.SCALER_PATH}.")
+except Exception as e:
+    logger.error(f"Failed to load scaler: {e}")
+    scaler = None
+
+# Load label encoder
+try:
+    if os.path.exists(settings.ENCODER_PATH):
+        with open(settings.ENCODER_PATH, "rb") as f:
+            label_encoder = pickle.load(f)
+        logger.info(f"Loaded label encoder from {settings.ENCODER_PATH}")
+    else:
+        logger.warning(f"[Warning] Label encoder file not found at {settings.ENCODER_PATH}.")
+except Exception as e:
+    logger.error(f"Failed to load label encoder: {e}")
+    label_encoder = None
+
+# ---------------- Label map fallback ----------------
 LABEL_MAP = {
     0: "Hello",
     1: "Yes",
@@ -31,38 +59,45 @@ LABEL_MAP = {
     6: "Rest"
 }
 
-# ---------------- Prediction ----------------
+# ---------------- Prediction function ----------------
 def predict_gesture(values: list) -> dict:
     """
-    Predicts gesture from single hand sensor data using a preloaded TFLite model.
+    Predict gesture from single-hand sensor data using the preloaded model.
+
     Args:
-        values (list): List of 11 sensor values.
+        values (list): List of sensor values (expected 11 for single-hand)
+
     Returns:
-        dict: Prediction result with status, prediction, and confidence.
+        dict: {"status": "success"/"error", "prediction": str, "confidence": float}
     """
     try:
-        if interpreter is None:
+        if model is None:
             return {"status": "error", "message": "Model not loaded"}
 
         if len(values) != 11:
             return {"status": "error", "message": "Invalid input (expected 11 values)"}
 
-        # Prepare input data
+        # Convert to numpy array
         input_data = np.array([values], dtype=np.float32)
 
-        # Run inference
-        interpreter.set_tensor(input_details[0]['index'], input_data)
-        interpreter.invoke()
-        output = interpreter.get_tensor(output_details[0]['index'])
+        # Apply scaler if available
+        if scaler:
+            input_data = scaler.transform(input_data)
 
-        # Process output
+        # Predict
+        output = model.predict(input_data)  # shape (1, num_classes)
         predicted_index = int(np.argmax(output))
         confidence = float(np.max(output))
-        label = LABEL_MAP.get(predicted_index, f"Class {predicted_index}")
+
+        # Map label
+        if label_encoder:
+            predicted_label = label_encoder.inverse_transform([predicted_index])[0]
+        else:
+            predicted_label = LABEL_MAP.get(predicted_index, str(predicted_index))
 
         return {
             "status": "success",
-            "prediction": label,
+            "prediction": predicted_label,
             "confidence": confidence
         }
 
