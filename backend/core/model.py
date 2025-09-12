@@ -13,7 +13,6 @@ model = None
 scaler = None
 label_encoder = None
 
-# Load Keras H5 model
 try:
     if os.path.exists(settings.MODEL_PATH):
         model = load_model(settings.MODEL_PATH)
@@ -24,7 +23,6 @@ except Exception as e:
     logger.error(f"Failed to load model: {e}")
     model = None
 
-# Load scaler
 try:
     if os.path.exists(settings.SCALER_PATH):
         with open(settings.SCALER_PATH, "rb") as f:
@@ -36,7 +34,6 @@ except Exception as e:
     logger.error(f"Failed to load scaler: {e}")
     scaler = None
 
-# Load label encoder
 try:
     if os.path.exists(settings.ENCODER_PATH):
         with open(settings.ENCODER_PATH, "rb") as f:
@@ -48,25 +45,12 @@ except Exception as e:
     logger.error(f"Failed to load label encoder: {e}")
     label_encoder = None
 
-# ---------------- Label map fallback ----------------
-LABEL_MAP = {
-    0: "Hello",
-    1: "Yes",
-    2: "No",
-    3: "We",
-    4: "Are",
-    5: "Students",
-    6: "Rest"
-}
-
 # ---------------- Prediction function ----------------
-def predict_gesture(values: list) -> dict:
+def predict_gesture(sequence: list) -> dict:
     """
-    Predict gesture from single-hand sensor data using the preloaded model.
-
+    Predict gesture from a sequence of frames.
     Args:
-        values (list): List of sensor values (expected 11 for single-hand)
-
+        sequence (list of lists): [[f1,...,f11], [f1,...,f11], ...]
     Returns:
         dict: {"status": "success"/"error", "prediction": str, "confidence": float}
     """
@@ -74,18 +58,22 @@ def predict_gesture(values: list) -> dict:
         if model is None:
             return {"status": "error", "message": "Model not loaded"}
 
-        if len(values) != 11:
-            return {"status": "error", "message": "Invalid input (expected 11 values)"}
+        # Convert sequence to numpy array
+        seq_array = np.array(sequence, dtype=np.float32)  # shape: (frames, 11)
 
-        # Convert to numpy array
-        input_data = np.array([values], dtype=np.float32)
+        # Validate shape
+        if seq_array.ndim != 2 or seq_array.shape[1] != 11:
+            return {"status": "error", "message": f"Invalid input shape {seq_array.shape}, expected (frames, 11)"}
 
-        # Apply scaler if available
+        # Apply scaler if available (2D)
         if scaler:
-            input_data = scaler.transform(input_data)
+            seq_array = scaler.transform(seq_array)
+
+        # Reshape to 3D for model (1, frames, 11)
+        seq_input = seq_array[np.newaxis, :, :]
 
         # Predict
-        output = model.predict(input_data)  # shape (1, num_classes)
+        output = model.predict(seq_input)  # shape: (1, num_classes)
         predicted_index = int(np.argmax(output))
         confidence = float(np.max(output))
 
@@ -93,13 +81,9 @@ def predict_gesture(values: list) -> dict:
         if label_encoder:
             predicted_label = label_encoder.inverse_transform([predicted_index])[0]
         else:
-            predicted_label = LABEL_MAP.get(predicted_index, str(predicted_index))
+            predicted_label = str(predicted_index)
 
-        return {
-            "status": "success",
-            "prediction": predicted_label,
-            "confidence": confidence
-        }
+        return {"status": "success", "prediction": predicted_label, "confidence": confidence}
 
     except Exception as e:
         logger.error(f"Prediction error: {e}")

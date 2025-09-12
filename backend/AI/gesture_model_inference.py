@@ -4,18 +4,17 @@ import pickle
 from tensorflow.keras.models import load_model
 from collections import deque
 from scipy.stats import mode
+from core.settings import settings
 import os
 
 # ==================== SETTINGS ====================
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-BACKEND_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))  # Move to backend/
-RESULTS_DIR = os.path.join(BACKEND_DIR, "results")
-MODEL_DIR = os.path.join(RESULTS_DIR, "models")
+RESULTS_DIR = settings.RESULTS_DIR
+MODEL_DIR = settings.MODEL_DIR
 
 # Paths
-MODEL_PATH = os.path.join(MODEL_DIR, "gesture_model_fold1.h5")  # default first fold
-SCALER_PATH = os.path.join(RESULTS_DIR, "scaler.pkl")
-ENCODER_PATH = os.path.join(RESULTS_DIR, "label_encoder.pkl")
+MODEL_PATH = settings.MODEL_PATH       # default first fold
+SCALER_PATH = settings.SCALER_PATH
+ENCODER_PATH = settings.ENCODER_PATH
 
 TIMESTEPS = 50   # must match training
 ROLLING_WINDOW = 5   # number of recent predictions to smooth

@@ -103,6 +103,7 @@ async def stream_ws(websocket: WebSocket):
 async def predict_ws(websocket: WebSocket):
     await predict_manager.connect(websocket)
     logger.info("New WS connection on /predict_ws")
+
     try:
         while True:
             try:
@@ -118,47 +119,51 @@ async def predict_ws(websocket: WebSocket):
             sequence = data.get("sensor_values")
             session_id = data.get("session_id", "unknown_session")
 
-            if not sequence:
-                logger.warning("Received empty sensor_values from WS client")
-                await websocket.send_json({"error": "No sensor_values provided"})
+            # Validate input
+            if not sequence or not all(len(frame) == 11 for frame in sequence):
+                msg = "Invalid input (expected 11 values per frame)"
+                logger.warning(msg)
+                await websocket.send_json({
+                    "prediction": None,
+                    "values": sequence[-1] if sequence else [],
+                    "session_id": session_id
+                })
                 continue
 
-            # Log incoming sequence
-            logger.info(f"Received sequence from session {session_id}: {sequence[-1]}")
-
-            # Update live data store
-            update_data(sequence[-1])
-
             try:
-                # Run model prediction
-                prediction = predict_gesture(sequence[-1])  # single frame for simplicity
+                # Predict gesture
+                result = predict_gesture(sequence)  # returns dict: {"status":..., "prediction":..., "confidence":...}
+                gesture_name = result.get("prediction") if result.get("status") == "success" else None
 
-                # Log prediction result
-                logger.info(f"Prediction result for session {session_id}: {prediction}")
+                logger.info(f"Prediction for session {session_id}: {gesture_name}")
 
-                # Check if model loaded
-                if prediction.get("status") != "success":
-                    logger.warning(f"Prediction failed: {prediction.get('message')}")
-
-                # Send prediction back to collector
-                await websocket.send_json({"prediction": prediction, "session_id": session_id})
-
-                # Broadcast prediction to frontend clients
-                await stream_manager.broadcast({
-                    "prediction": prediction,
+                # Send simplified payload to WS client
+                await websocket.send_json({
+                    "prediction": gesture_name,
                     "values": sequence[-1],
                     "session_id": session_id
                 })
 
-                # Trigger TTS if prediction is successful
-                if prediction.get("status") == "success" and "prediction" in prediction:
-                    tts_worker.enqueue(prediction)
-                    logger.info(f"TTS enqueued for gesture: {prediction['prediction']}")
+                # Broadcast to live clients
+                await stream_manager.broadcast({
+                    "prediction": gesture_name,
+                    "values": sequence[-1],
+                    "session_id": session_id
+                })
+
+                # Trigger TTS only for meaningful gestures
+                if gesture_name and gesture_name not in ["Rest"]:
+                    tts_worker.enqueue({"prediction": gesture_name})
 
             except Exception as e:
-                logger.error(f"Error during prediction for session {session_id}: {e}")
-                await websocket.send_json({"error": str(e)})
+                logger.error(f"Prediction error: {e}")
+                await websocket.send_json({
+                    "prediction": None,
+                    "values": sequence[-1] if sequence else [],
+                    "session_id": session_id
+                })
 
     finally:
         predict_manager.disconnect(websocket)
         logger.info("WS connection removed from /predict_ws")
+

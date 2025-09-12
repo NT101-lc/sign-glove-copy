@@ -1,66 +1,72 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
-const useLivePredict = (url) => {
+const useLivePredict = (wsUrl) => {
   const [predictions, setPredictions] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef(null);
-  const reconnectTimeout = useRef(null);
-  const lastSpokenRef = useRef(0);
+
+  const send = useCallback(
+    (data) => {
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify(data));
+      }
+    },
+    []
+  );
 
   useEffect(() => {
-    let mounted = true;
+    let ws;
+    let reconnectTimeout;
 
     const connect = () => {
-      if (!mounted) return;
+      ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
 
-      wsRef.current = new WebSocket(url);
-
-      wsRef.current.onopen = () => {
-        console.log("WS connected");
+      ws.onopen = () => {
         setIsConnected(true);
+        console.log("WS connected");
       };
 
-      wsRef.current.onmessage = (event) => {
-  console.log(" Raw WS message:", event.data); // <--- ADD THIS
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
 
-  try {
-    const data = JSON.parse(event.data);
-    setPredictions((prev) => [data, ...prev].slice(0, 10));
+          // Ensure proper prediction format
+          if (!data.prediction) return;
 
-    // Optional: TTS debounce
-    const now = Date.now();
-    if (data.gesture && now - lastSpokenRef.current > 1000) {
-      lastSpokenRef.current = now;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(new SpeechSynthesisUtterance(data.gesture));
-    }
-  } catch (err) {
-    console.error(" Invalid WS message:", err, event.data); // include raw
-  }
-};
+          // Accept only strings or objects with status
+          const p = data.prediction;
+          if (typeof p === "string" || (p.status && p.status === "success") || (p.status && p.status === "error")) {
+            setPredictions((prev) => [data, ...prev.slice(0, 19)]); // keep last 20
+          } else {
+            console.warn("Invalid prediction format:", p);
+          }
+        } catch (err) {
+          console.warn("Failed to parse WS message:", event.data, err);
+        }
+      };
 
-      wsRef.current.onclose = () => {
-        console.log("WS closed");
+      ws.onclose = () => {
         setIsConnected(false);
-        if (mounted) reconnectTimeout.current = setTimeout(connect, 2000);
+        console.warn("WS disconnected, reconnecting in 2s");
+        reconnectTimeout = setTimeout(connect, 2000);
       };
 
-      wsRef.current.onerror = (err) => {
+      ws.onerror = (err) => {
         console.error("WS error:", err);
-        wsRef.current.close();
+        ws.close();
       };
     };
 
     connect();
 
     return () => {
-      mounted = false;
-      if (wsRef.current) wsRef.current.close();
-      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      if (ws) ws.close();
     };
-  }, [url]);
+  }, [wsUrl]);
 
-  return { predictions, isConnected };
+  return { predictions, isConnected, send };
 };
 
 export default useLivePredict;
