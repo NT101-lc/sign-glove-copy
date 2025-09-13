@@ -20,6 +20,7 @@ from core.settings import settings
 SCALER_PATH = os.path.join(settings.RESULTS_DIR, 'scaler.pkl')
 ENCODER_PATH = os.path.join(settings.RESULTS_DIR, 'label_encoder.pkl')
 MODEL_PATH_TEMPLATE = os.path.join(settings.MODEL_DIR, 'gesture_model_fold{}.h5')
+DATA_DIR = settings.DATA_DIR
 METRICS_PATH = settings.METRICS_PATH
 RESULTS_DIR = settings.RESULTS_DIR
 RAW_DATA_PATH = settings.RAW_DATA_PATH
@@ -27,7 +28,7 @@ os.makedirs(RESULTS_DIR, exist_ok=True)
 
 TIMESTEPS = 50
 KFOLD_SPLITS = 5
-EPOCHS = 20
+EPOCHS = 25
 BATCH_SIZE = 32
 
 # ==================== AUGMENTATION CONFIG ====================
@@ -52,17 +53,60 @@ def get_augmentation_config(dataset_size):
         mixup_ratio = 0.1
     return config, mixup_ratio
 
+# ==================== MERGE MULTIPLE GESTURE FILES ====================
+gesture_files = [
+    "Hello.csv",
+    "We.csv",
+    "Are.csv",
+    "U.csv",
+    "Students.csv"
+]
+
+gesture_files = [
+    "Hello.csv",
+    "We.csv",
+    "Are.csv",
+    "U.csv",
+    "Students.csv"
+]
+
+COLUMNS = [
+    "session_id",
+    "flex1", "flex2", "flex3", "flex4", "flex5",
+    "accel_x", "accel_y", "accel_z",
+    "gyro_x", "gyro_y", "gyro_z"
+]
+
+dfs = []
+for fname in gesture_files:
+    fpath = os.path.join(DATA_DIR, fname)
+
+    # Force header names, ignore original header row
+    df = pd.read_csv(fpath, header=None, names=COLUMNS, skiprows=1)
+
+    # Inject gesture label from filename
+    label_name = os.path.splitext(fname)[0]
+    df["label"] = label_name
+
+    dfs.append(df)
+
+# Merge into one dataframe
+df = pd.concat(dfs, ignore_index=True)
+
+# Save merged dataset
+df.to_csv(RAW_DATA_PATH, index=False)
+print(f"✅ Merged dataset saved with shape {df.shape} and columns: {df.columns.tolist()}")
+
 # ==================== LOAD & NORMALIZE DATA ====================
 df = pd.read_csv(RAW_DATA_PATH)
-if 'session_id' in df.columns:
-    df = df.drop('session_id', axis=1)
 
-X_raw = df.drop('label', axis=1).values
-y = df['label'].values
+X_raw = df.drop(["label", "session_id"], axis=1).values
+y = df["label"].values
 NUM_FEATURES = X_raw.shape[1]
 
 scaler = StandardScaler()
 X_raw = scaler.fit_transform(X_raw)
+
 with open(SCALER_PATH, "wb") as f:
     pickle.dump(scaler, f)
 

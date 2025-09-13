@@ -4,55 +4,73 @@ import useTTS from "../hooks/useTTS.jsx";
 import "./styling/LivePredict.css";
 
 const SKIP_GESTURES = ["Rest"];
-const MAX_RECENT = 10;
+const MAX_RECENT = 5;
 
 const LivePredict = () => {
   const { predictions, isConnected } = useLivePredict(
     "ws://127.0.0.1:8000/gesture/predict_ws"
   );
-  const { speak } = useTTS(2000, 1000);
+  const { speak } = useTTS(2000, 1000); // cooldown 2s, queue 1s
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [recentGestures, setRecentGestures] = useState([]);
-  const lastSpokenRef = useRef(null);
+  const incomingBufferRef = useRef([]);
 
-  // Auto-speak latest prediction
-  useEffect(() => {
-    if (!ttsEnabled || predictions.length === 0) return;
-
-    const latest = predictions[0]?.prediction;
-
-    if (
-      latest &&
-      typeof latest === "string" &&
-      latest !== lastSpokenRef.current &&
-      !SKIP_GESTURES.includes(latest)
-    ) {
-      speak(latest);
-      lastSpokenRef.current = latest;
-    }
-  }, [predictions, ttsEnabled, speak]);
-
-  // Keep recent gestures
+  // Buffer incoming predictions to prevent UI flicker
   useEffect(() => {
     if (predictions.length === 0) return;
-    const latest = predictions[0]?.prediction;
-    if (latest && typeof latest === "string") {
-      setRecentGestures((prev) => {
-        const newList = [latest, ...prev];
-        return newList.slice(0, MAX_RECENT);
-      });
-    }
+    incomingBufferRef.current.push(predictions[predictions.length - 1]);
   }, [predictions]);
 
+  // Flush buffer every animation frame
+  useEffect(() => {
+    let animationFrame;
+
+    const flushBuffer = () => {
+      if (incomingBufferRef.current.length > 0) {
+        const latest = incomingBufferRef.current.shift();
+
+        // Update recent gestures
+        if (latest?.prediction && !SKIP_GESTURES.includes(latest.prediction)) {
+          setRecentGestures((prev) => {
+            const newList = [...prev, latest.prediction];
+            return newList.slice(-MAX_RECENT);
+          });
+
+          // Trigger TTS for every meaningful gesture
+          if (ttsEnabled) {
+            speak(latest.prediction);
+          }
+        }
+      }
+      animationFrame = requestAnimationFrame(flushBuffer);
+    };
+
+    animationFrame = requestAnimationFrame(flushBuffer);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [ttsEnabled, speak]);
+
   const renderPrediction = () => {
-    if (predictions.length === 0) return "Waiting for predictions...";
-    const p = predictions[0].prediction;
-    if (!p) return "No prediction yet";
-    if (typeof p === "string") return p;
-    if (p.status === "error") return `Error: ${p.message}`;
-    if (p.status === "success" && p.prediction) return p.prediction;
-    return JSON.stringify(p);
+    if (incomingBufferRef.current.length === 0 && predictions.length === 0)
+      return "Waiting for predictions...";
+
+    const latest =
+      incomingBufferRef.current[incomingBufferRef.current.length - 1] ||
+      predictions[predictions.length - 1];
+
+    if (!latest) return "No prediction yet";
+    if (typeof latest.prediction === "string") return latest.prediction;
+    if (latest.prediction?.status === "error")
+      return `Error: ${latest.prediction.message}`;
+    if (latest.prediction?.status === "success" && latest.prediction.prediction)
+      return latest.prediction.prediction;
+    return JSON.stringify(latest.prediction);
   };
+
+  const latestValues =
+    (incomingBufferRef.current[incomingBufferRef.current.length - 1]?.values ||
+      predictions[predictions.length - 1]?.values ||
+      []).slice(0, 10);
 
   return (
     <div className="live-container">
@@ -88,9 +106,9 @@ const LivePredict = () => {
         </div>
       </div>
 
-      {predictions.length > 0 && predictions[0].values && (
+      {latestValues.length > 0 && (
         <div className="sensor-preview">
-          Sensor: {predictions[0].values.slice(0, 10).join(", ")}
+          Sensor: {latestValues.join(", ")}
         </div>
       )}
     </div>

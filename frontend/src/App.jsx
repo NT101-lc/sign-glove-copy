@@ -17,6 +17,7 @@ import CSVManager from './pages/CSVManager';
 import { MdDarkMode, MdMenu, MdClose } from 'react-icons/md';
 import Login from './pages/Login';
 import { apiRequest } from './api';
+import LivePredictTest from "./pages/LivePredictTest.jsx";
 
 function useDarkMode() {
   const [dark, setDark] = useState(() => {
@@ -174,6 +175,7 @@ const App = () => {
             <Route path="/audio-manager" element={isEditor ? <AudioManager user={user} /> : <Dashboard user={user} />} />
             <Route path="/tts-manager" element={isEditor ? <TTSManager user={user} /> : <Dashboard user={user} />} />
             <Route path="/login" element={<Login onLogin={setUser} />} />
+            
           </Routes>
         </main>
 

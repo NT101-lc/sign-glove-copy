@@ -14,37 +14,30 @@ logger = logging.getLogger("collector")
 
 # WebSocket sender config
 USE_WS = True
-BATCH_SIZE = 50
+BATCH_SIZE = 5
 BATCH_DELAY = 0.05  # seconds
 EXPECTED_VALUES = 11  # must match model input
 
 async def ws_sender(ws_url, sequence_queue, session_id="demo", batch_size=BATCH_SIZE):
-    """Send batches of frames via WebSocket."""
+    """Send frames individually via WebSocket with slight delay."""
     while True:
         try:
             async with websockets.connect(ws_url) as ws:
                 logger.info("Connected to WS backend")
-                batch = []
 
                 while True:
                     try:
+                        # Wait for next batch from queue
                         seq = await asyncio.wait_for(sequence_queue.get(), timeout=BATCH_DELAY)
                         # seq is a list of frames
-                        batch.extend(seq)
-
-                        # Send full batch
-                        while len(batch) >= batch_size:
-                            payload = {"sensor_values": batch[:batch_size], "session_id": session_id}
+                        for frame in seq:
+                            payload = {"sensor_values": [frame], "session_id": session_id}
                             await ws.send(json.dumps(payload))
-                            logger.info(f"Sent batch of {len(payload['sensor_values'])} frames")
-                            batch = batch[batch_size:]  # keep leftover frames
+                            logger.info(f"Sent 1 frame: {frame}")
+                            await asyncio.sleep(0.5)  # ~30ms delay between frames
 
                     except asyncio.TimeoutError:
-                        if batch:
-                            payload = {"sensor_values": batch, "session_id": session_id}
-                            await ws.send(json.dumps(payload))
-                            logger.info(f"Sent batch of {len(batch)} frames (timeout)")
-                            batch = []
+                        pass  # nothing to send yet
 
         except Exception as e:
             logger.warning(f"WebSocket error: {e}, reconnecting in 2s")
@@ -103,7 +96,7 @@ async def main():
         min_length=10
     )
 
-    sequence_queue = asyncio.Queue()
+    sequence_queue = asyncio.Queue(maxsize=100)
 
     if USE_WS:
         asyncio.create_task(ws_sender(backend_cfg["ws_url"], sequence_queue, backend_cfg["session_id"]))

@@ -34,10 +34,10 @@ FLEX_SENSORS = 5
 ACCEL_SENSORS = 3
 GYRO_SENSORS = 3
 TOTAL_SENSORS = FLEX_SENSORS + ACCEL_SENSORS + GYRO_SENSORS
-LABEL = 'Student'  # 👈 Set this before collecting (rest gesture)
+LABEL = 'Students'  # 👈 Set this before collecting (rest gesture)
 SESSION_ID = 'noun1'  # Use a simple, human-readable session id for this data collection
 CSV_DIR = app_settings.DATA_DIR
-RAW_DATA_PATH = os.path.join(CSV_DIR, 'demo_data.csv')
+RAW_DATA_PATH = os.path.join(CSV_DIR, 'Students.csv')
 FILE_PATH = os.path.join(CSV_DIR, f"{LABEL}_{SESSION_ID}.csv")
 LOG_FILE = 'data_collection.log'
 

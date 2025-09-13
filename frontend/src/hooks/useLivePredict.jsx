@@ -3,68 +3,81 @@ import { useEffect, useState, useRef, useCallback } from "react";
 const useLivePredict = (wsUrl) => {
   const [predictions, setPredictions] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
+
   const wsRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
+  const didConnectRef = useRef(false);
+  const incomingBuffer = useRef([]); // buffer for rapid frames
+  const animationFrameRef = useRef(null);
 
-  const send = useCallback(
-    (data) => {
-      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-        wsRef.current.send(JSON.stringify(data));
-      }
-    },
-    []
-  );
+  const connect = useCallback(() => {
+    if (wsRef.current) return;
 
-  useEffect(() => {
-    let ws;
-    let reconnectTimeout;
+    const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
 
-    const connect = () => {
-      ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        setIsConnected(true);
-        console.log("WS connected");
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-
-          // Ensure proper prediction format
-          if (!data.prediction) return;
-
-          // Accept only strings or objects with status
-          const p = data.prediction;
-          if (typeof p === "string" || (p.status && p.status === "success") || (p.status && p.status === "error")) {
-            setPredictions((prev) => [data, ...prev.slice(0, 19)]); // keep last 20
-          } else {
-            console.warn("Invalid prediction format:", p);
-          }
-        } catch (err) {
-          console.warn("Failed to parse WS message:", event.data, err);
-        }
-      };
-
-      ws.onclose = () => {
-        setIsConnected(false);
-        console.warn("WS disconnected, reconnecting in 2s");
-        reconnectTimeout = setTimeout(connect, 2000);
-      };
-
-      ws.onerror = (err) => {
-        console.error("WS error:", err);
-        ws.close();
-      };
+    ws.onopen = () => {
+      console.log("WebSocket connected!");
+      setIsConnected(true);
+      didConnectRef.current = true;
     };
 
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        incomingBuffer.current.push(data);
+
+        // Schedule flush via requestAnimationFrame
+        if (!animationFrameRef.current) {
+          animationFrameRef.current = requestAnimationFrame(() => {
+            setPredictions((prev) => [...prev, ...incomingBuffer.current]);
+            incomingBuffer.current = [];
+            animationFrameRef.current = null;
+          });
+        }
+      } catch (err) {
+        console.error("Failed to parse message:", err);
+      }
+    };
+
+    ws.onclose = (e) => {
+      console.log("WebSocket closed, reconnecting...", e.reason);
+      setIsConnected(false);
+      wsRef.current = null;
+
+      if (didConnectRef.current) {
+        reconnectTimeoutRef.current = setTimeout(connect, 1000);
+      }
+    };
+
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+      ws.close();
+    };
+  }, [wsUrl]);
+
+  const send = useCallback((data) => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(data));
+    } else {
+      console.warn("WebSocket not open. Cannot send message.");
+    }
+  }, []);
+
+  useEffect(() => {
     connect();
 
     return () => {
-      if (reconnectTimeout) clearTimeout(reconnectTimeout);
-      if (ws) ws.close();
+      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+
+      const ws = wsRef.current;
+      if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+        ws.close();
+      }
+      wsRef.current = null;
     };
-  }, [wsUrl]);
+  }, [connect]);
 
   return { predictions, isConnected, send };
 };
